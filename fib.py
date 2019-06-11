@@ -4,6 +4,7 @@ Fibonacci fun.
 See "Classic Computer Science Problems in Python" Ch. 1, by David Kopec
 """
 import time
+from functools import lru_cache
 
 def naive(n):
     """
@@ -27,6 +28,15 @@ def explicit_memoization(n):
         fib_lib[n] = explicit_memoization(n - 2) + explicit_memoization(n - 1)
     return fib_lib[n]
     
+@lru_cache(maxsize=None)
+def implicit_memoization(n):
+    """
+    Recursive implementation with implicit memoization using 
+    functools.lru_cache.
+    """
+    if n < 2:
+        return n
+    return implicit_memoization(n - 2) + implicit_memoization(n - 1)
 
 def profile(function_to_profile, fib_seq_num=30):
     """
@@ -54,7 +64,7 @@ if __name__ == "__main__":
     import fib
     for item in dir(fib):
         f = getattr(fib, item)
-        if callable(f) and item is not "profile":
+        if callable(f) and item not in ["profile", "lru_cache"]:
             ax.plot(*profile(f), label=f.__name__)
 
     # Pretty-up plot
