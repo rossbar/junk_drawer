@@ -38,6 +38,18 @@ def implicit_memoization(n):
         return n
     return implicit_memoization(n - 2) + implicit_memoization(n - 1)
 
+def iterative(n):
+    """
+    Iterative implementation of computing fib(n)
+    """
+    if n < 2:
+        return n
+    n2, n1 = 0, 1
+    for i in range(1, n):
+        n2, n1 = n1, n2 + n1
+    return n1
+
+
 def profile(function_to_profile, fib_seq_num=30):
     """
     Dumb Fibonacci function profiling.
