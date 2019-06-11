@@ -49,6 +49,21 @@ def iterative(n):
         n2, n1 = n1, n2 + n1
     return n1
 
+def generator(n):
+    """
+    Generator for producing the entire Fibonacci sequence up to n when iterated
+    over.
+    """
+    # Special cases
+    yield 0
+    if n > 0: yield 1
+    # Initial conditions
+    n2 = 0      # fib(0)
+    n1 = 1      # fib(1)
+    for _ in range(1, n):
+        n2, n1 = n1, n2 + n1
+        yield n1
+
 
 def profile(function_to_profile, fib_seq_num=30):
     """
