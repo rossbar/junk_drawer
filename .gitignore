@@ -1,3 +1,5 @@
+# Vim cruft
+*.swp
 # Python cruft
 __pycache__/*
 *.pyc
