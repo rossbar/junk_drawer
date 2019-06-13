@@ -25,7 +25,7 @@ class TowersOfHanoi(object):
         self.tower_3 = Stack()
         self.num_discs = num_discs
         # Initialize tower
-        for disc in range(1, self.num_discs + 1):
+        for disc in range(self.num_discs, 0, -1):
             self.tower_1.push(disc)
         # Counter for number of recursive calls needed to solve
         self._num_steps = 0
@@ -40,7 +40,8 @@ class TowersOfHanoi(object):
                     out += str(tower[i])
                 out += "\t"
             out += "\n"
-        return out
+        # Flip UD
+        return "\n".join(out.split("\n")[::-1])
 
     @property
     def towers(self):
