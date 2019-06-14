@@ -92,3 +92,44 @@ def solve(begin, end, intermediary, disc):
         solve(begin, intermediary, end, disc - 1)
         solve(begin, end, intermediary, 1)
         solve(intermediary, end, begin, disc - 1)
+
+def classic_solution():
+    """
+    Create an instance of the classic Towers of Hanoi problem and solve it
+    verbosely.
+    """
+    towers = TowersOfHanoi()
+    towers.solve()
+
+def evaluate_performance(disc_max=21):
+    """
+    Evaluate how the recursive solution to the Towers of Hanoi problem scales
+    with the number of discs.
+    """
+    print("Computing Solution for up to {} discs...".format(disc_max - 1))
+    import matplotlib.pyplot as plt
+    from timeit import timeit
+
+    # Set up plot
+    fig, ax = plt.subplots()
+    ax2 = ax.twinx()
+    ax.set_title("Performance of Recursive Solution to Towers of Hanoi")
+    ax.set_xlabel("Number of Discs")
+    ax.set_ylabel("Evaluation time (s)")
+    ax2.set_ylabel("# Recursive function calls")
+
+    disc_range = range(3, disc_max)
+    eval_times, num_calls = [], []
+    for num_discs in disc_range:
+        towers = TowersOfHanoi(num_discs, verbose=False)
+        eval_times.append(timeit(towers.solve, number=1))
+        num_calls.append(towers._num_steps)
+
+    ax.plot(disc_range, eval_times)
+    ax2.plot(disc_range, num_calls)
+    fig.tight_layout()
+    plt.show()
+
+if __name__ == "__main__":
+    classic_solution()
+    evaluate_performance()
