@@ -25,7 +25,7 @@ class Maze(object):
         self._nrows = nrows
         self._ncols = ncols
         self._blocked_cells = 0
-        self.start = start,
+        self.start = start
         self.goal = end
         # Initialize grid
         self._grid = [[Cell.empty for c in range(self._ncols)] for r in range(self._nrows)]
@@ -56,3 +56,35 @@ class Maze(object):
         Test whether the end of the maze has been reached.
         """
         return loc == self.goal
+
+    def possible_next_locations(self, loc):
+        """
+        Given the current location, determine valid locations for the next
+        move in the maze.
+
+        Parameters
+        ----------
+        loc : MazeLocation
+            Current location in the grid
+
+        Returns
+        -------
+        possible_locations : List[MazeLocation]
+            List of allowed locations for the next move on the grid
+        """
+        possible_locations = []
+        # Check left
+        if loc.col > 0 and self._grid[loc.row][loc.col - 1] != Cell.blocked:
+            possible_locations.append(MazeLocation(loc.row, loc.col - 1))
+        # Check right
+        if loc.col + 1 < self._ncols and self._grid[loc.row][loc.col + 1] != Cell.blocked:
+            possible_locations.append(MazeLocation(loc.row, loc.col + 1))
+        # Check top
+        if loc.row > 0 and self._grid[loc.row - 1][loc.col] != Cell.blocked:
+            possible_locations.append(MazeLocation(loc.row - 1, loc.col))
+        # Check bottom
+        if loc.row + 1 < self._nrows and self._grid[loc.row + 1][loc.col] != Cell.blocked:
+            possible_locations.append(MazeLocation(loc.row + 1, loc.col))
+        return possible_locations
+        
+
