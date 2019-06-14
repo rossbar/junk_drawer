@@ -51,7 +51,7 @@ class Maze(object):
                     self._grid[row][col] = Cell.blocked
                     self._blocked_cells += 1
 
-    def goal_test(loc):
+    def goal_test(self, loc):
         """
         Test whether the end of the maze has been reached.
         """
@@ -86,5 +86,27 @@ class Maze(object):
         if loc.row + 1 < self._nrows and self._grid[loc.row + 1][loc.col] != Cell.blocked:
             possible_locations.append(MazeLocation(loc.row + 1, loc.col))
         return possible_locations
-        
 
+    def mark_path(self, path):
+        """
+        Mark path through the maze.
+
+        Parameters
+        ----------
+        path : list
+            List of MazeLocation objects representing path.
+        """
+        for ml in path:
+            self._grid[ml.row][ml.col] = Cell.path
+        # Re-label start and end
+        self._grid[self.start.row][self.start.col] = Cell.start
+        self._grid[self.goal.row][self.goal.col] = Cell.goal
+
+    def clear_path(self):
+        """
+        Remove path visualization from maze, if any.
+        """
+        for i, row in enumerate(self._grid):
+            for j, cell in enumerate(row):
+                if cell == Cell.path:
+                    self._grid[i][j] = Cell.empty
