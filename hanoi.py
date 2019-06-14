@@ -19,11 +19,12 @@ class TowersOfHanoi(object):
     """
     Towers of Hanoi
     """
-    def __init__(self, num_discs=3):
+    def __init__(self, num_discs=3, verbose=True):
         self.tower_1 = Stack()
         self.tower_2 = Stack()
         self.tower_3 = Stack()
         self.num_discs = num_discs
+        self.verbose = verbose
         # Initialize tower
         for disc in range(self.num_discs, 0, -1):
             self.tower_1.push(disc)
@@ -47,7 +48,7 @@ class TowersOfHanoi(object):
     def towers(self):
         return (self.tower_1, self.tower_2, self.tower_3)
 
-    def _step(self, begin, end, temp, disc, verbose=True):
+    def _step(self, begin, end, temp, disc):
         """
         Recursive solution to towers of Hanoi.
 
@@ -60,16 +61,15 @@ class TowersOfHanoi(object):
             self._step(begin, end, temp, 1)
             self._step(temp, end, begin, disc - 1)
         self._num_steps += 1
-        if verbose:
+        if self.verbose:
             print("Step %i:" %(self._num_steps))
             print(self)
 
-    def solve(self, verbose=True):
+    def solve(self):
         """
         Kick-off recursive solution chain.
         """
-        self._step(self.tower_1, self.tower_3, self.tower_2, self.num_discs,
-                   verbose=verbose)
+        self._step(self.tower_1, self.tower_3, self.tower_2, self.num_discs)
 
 def solve(begin, end, intermediary, disc):
     """
