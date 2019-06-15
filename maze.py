@@ -110,3 +110,26 @@ class Maze(object):
             for j, cell in enumerate(row):
                 if cell == Cell.path:
                     self._grid[i][j] = Cell.empty
+
+if __name__ == "__main__":
+    from search import dfs, bfs, node_to_path
+    m = Maze()
+    print(m)
+    df_solution = dfs(m.start, m.goal_test, m.possible_next_locations)
+    if df_solution is None:
+        print("Depth-first search did not find solution")
+    else:
+        df_path = node_to_path(df_solution)
+        m.mark_path(df_path)
+        print("Path from DFS:")
+        print(m)
+    m.clear_path()
+    bf_solution = bfs(m.start, m.goal_test, m.possible_next_locations)
+    if bf_solution is None:
+        print("Breadth-first search failed to find solution")
+    else:
+        bf_path = node_to_path(bf_solution)
+        m.mark_path(bf_path)
+        print("Path from BFS:")
+        print(m)
+    m.clear_path()
