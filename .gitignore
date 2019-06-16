@@ -3,3 +3,5 @@
 # Python cruft
 __pycache__/*
 *.pyc
+# Ignore data files
+data/*
