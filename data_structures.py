@@ -2,6 +2,7 @@
 Some data structures not included in collections
 """
 from collections import deque
+from heapq import heappush, heappop
 
 class Stack(list):
     """
@@ -36,3 +37,20 @@ class Queue(deque):
 
     def pop(self):
         return self.popleft()
+
+class PriorityQueue(list):
+    """
+    A PriorityQueue.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    @property
+    def empty(self):
+        return len(self) == 0
+
+    def push(self, item):
+        heappush(self, item)
+
+    def pop(self):
+        return heappop(self)

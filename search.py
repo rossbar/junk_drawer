@@ -1,7 +1,7 @@
 """
 Generic search algorithms implemented in python.
 """
-from data_structures import Stack, Queue
+from data_structures import Stack, Queue, PriorityQueue
 
 class Node(object):
     """
@@ -72,6 +72,56 @@ def dfs(initial, goal_test, successors):
                 continue
             explored.push(child)
             frontier.push(Node(child, current_node))
+    # Search terminates without finding goal
+    return None
+
+def a_star(initial, goal_test, successors, cost, heuristic):
+    """
+    A* search using priority queue.
+
+    Parameters
+    ----------
+    initial : Generic
+        Starting point of the search.
+    goal_test : Callable
+        Callable returing boolean value indicating search success.
+    successors : Callable
+        Callable returning list of next possible locations in search space.
+    cost : Callable
+        Cost function returning the cost of a proposed move between nodes in
+        search space.
+    heuristic : Callable
+        Heuristic to evaluate proposed nodes
+
+    Returns
+    -------
+    found : Generic
+        Node corresponding to successful goal_test.
+        Returns None if search fails.
+    """
+    # Initialize frontier
+    frontier = PriorityQueue()
+    frontier.push(Node(initial, None, cost=0.0,
+                       heuristic=heuristic(initial)))
+    # Structure for holding explored nodes (with their costs)
+    explored = {initial : 0.0}
+
+    # Continue search as long as their are candidates in the search space
+    while not frontier.empty:
+        current_node = frontier.pop()
+        current_state = current_node.state
+        # If current node meets goal, then search completes successfully
+        if goal_test(current_state):
+            return current_node
+        # Populate next step in search
+        for child in successors(current_state):
+            new_cost = cost(current_node)
+            if child not in explored or explored[child] > new_cost: 
+                explored[child] = new_cost
+                frontier.push(Node(child,
+                                   parent_node=current_node,
+                                   cost=new_cost,
+                                   heuristic=heuristic(child)))
     # Search terminates without finding goal
     return None
 

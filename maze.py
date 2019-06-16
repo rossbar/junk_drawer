@@ -6,6 +6,7 @@ See 'Classic Computer Science Problems in Python', Ch. 2
 from enum import Enum
 from collections import namedtuple
 import random
+from math import sqrt
 
 class Cell(str, Enum):
     empty =   " "
@@ -15,6 +16,34 @@ class Cell(str, Enum):
     path =    "*"
 
 MazeLocation = namedtuple("MazeLocation", ("row", "col"))
+
+def euclidean_distance(goal):
+    """
+    Return a callable that computes the euclidean distance between an input
+    MazeLocation and the goal.
+    """
+    def distance(ml):
+        dx = (ml.col - goal.col)
+        dy = (ml.row - goal.row)
+        return sqrt(dx**2 + dy**2)
+    return distance
+
+def manhattan_distance(goal):
+    """
+    Return a callable that computes the manhattan distance between an input
+    MazeLocation and the goal
+    """
+    def distance(ml):
+        dx = (ml.col - goal.col)
+        dy = (ml.row - goal.row)
+        return abs(dx) + abs(dy)
+    return distance
+
+def grid_cost(current_node):
+    """
+    Cost function for cardinal motion on a grid.
+    """
+    return current_node.cost + 1
 
 class Maze(object):
     """
@@ -113,7 +142,7 @@ class Maze(object):
 
 if __name__ == "__main__":
     import time
-    from search import dfs, bfs, node_to_path
+    from search import dfs, bfs, a_star, node_to_path
     m = Maze()
     print(m)
     tic = time.time()
@@ -140,5 +169,20 @@ if __name__ == "__main__":
         print("Path from BFS:")
         print("  Path length: {}".format(len(bf_path)))
         print("  Eval time: %.5f"%(toc - tic))
+        print(m)
+    m.clear_path()
+    heur = euclidean_distance(m.goal)
+    tic = time.time()
+    astar_solution = a_star(m.start, m.goal_test, m.possible_next_locations,
+                            grid_cost, heur)
+    toc = time.time()
+    if astar_solution is None:
+        print("A* search failed to find a solution")
+    else:
+        astar_path = node_to_path(astar_solution)
+        m.mark_path(astar_path)
+        print("Path from A*:")
+        print("  Path length: {}".format(len(astar_path)))
+        print("  Eval time: %.5f" %(toc-tic))
         print(m)
     m.clear_path()
