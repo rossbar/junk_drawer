@@ -143,7 +143,10 @@ class Maze(object):
 if __name__ == "__main__":
     import time
     from search import dfs, bfs, a_star, node_to_path
-    m = Maze()
+    nrows, ncols = 24, 120
+    start = MazeLocation(0, 0)
+    end = MazeLocation(nrows - 1, ncols - 1)
+    m = Maze(nrows, ncols, start=start, end=end)
     print(m)
     tic = time.time()
     df_solution = dfs(m.start, m.goal_test, m.possible_next_locations)
@@ -181,7 +184,22 @@ if __name__ == "__main__":
     else:
         astar_path = node_to_path(astar_solution)
         m.mark_path(astar_path)
-        print("Path from A*:")
+        print("Path from A* (euclidean):")
+        print("  Path length: {}".format(len(astar_path)))
+        print("  Eval time: %.5f" %(toc-tic))
+        print(m)
+    m.clear_path()
+    heur = manhattan_distance(m.goal)
+    tic = time.time()
+    astar_solution = a_star(m.start, m.goal_test, m.possible_next_locations,
+                            grid_cost, heur)
+    toc = time.time()
+    if astar_solution is None:
+        print("A* search failed to find a solution")
+    else:
+        astar_path = node_to_path(astar_solution)
+        m.mark_path(astar_path)
+        print("Path from A* (manhattan):")
         print("  Path length: {}".format(len(astar_path)))
         print("  Eval time: %.5f" %(toc-tic))
         print(m)
