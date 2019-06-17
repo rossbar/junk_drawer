@@ -69,6 +69,48 @@ def setup_america():
                 constraints.append(MapColorConstraint(state, border))
     return variables, domains, constraints
 
+def plot_america_result(state_color_dict):
+    """
+    Given the assignment returned by a successful constraint-satisfaction
+    solution of the map-coloring problem for the US states, produce an
+    MPL-based plot to visualize the result.
+
+    Based on answer to this stack overflow post:
+    https://stackoverflow.com/questions/53290602/how-to-use-cartopy-to-create-colored-us-states
+    """
+    import matplotlib.pyplot as plt
+    import cartopy.crs as ccrs
+    from cartopy.io import shapereader
+
+    # Set up figure for displaying US map
+    fig = plt.figure()
+    ax = fig.add_axes([0, 0, 1, 1], projection=ccrs.LambertConformal())
+    ax.set_extent([-125, -66.5, 20, 50], ccrs.Geodetic())
+
+    # Get natural earth data for US states
+    # (see https://scitools.org.uk/cartopy/docs/v0.15/tutorials/using_the_shapereader.html)
+    shapename = 'admin_1_states_provinces_lakes_shp'
+    states_shp = shapereader.natural_earth(resolution='110m',
+                                           category='cultural',
+                                           name=shapename)
+
+    # Set up axes for display
+    ax.background_patch.set_visible(False)
+    ax.outline_patch.set_visible(False)
+    ax.set_title("Solution to Map Coloring Problem: US States")
+    
+    # Colorize the states
+    for state in shapereader.Reader(states_shp).records():
+        try:
+            ax.add_geometries([state.geometry], ccrs.PlateCarree(),
+                              facecolor=state_color_dict[state.attributes['name']],
+                              edgecolor='black')
+        except KeyError:
+            pass
+    plt.show()
+    return fig
+
+
 if __name__ == "__main__":
     from constraint_satisfaction import ConstraintSatisfactionProblem as CSP
     # Load data
@@ -84,4 +126,5 @@ if __name__ == "__main__":
     if solution is None:
         print("Failed to find solution")
     else:
-        print(solution)
+        #print(solution)
+        plot_america_result(solution)
