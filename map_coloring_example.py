@@ -40,14 +40,43 @@ australia = {
                      MapColorConstraint("Victoria", "Tasmania")]
 }
 
-if __name__ == "__main__":
-    from constraint_satisfaction import ConstraintSatisfactionProblem as CSP
+def setup_australia():
+    """
+    Set up map color problem for australia
+    """
     # Construct domain for each variable
     domains = { v : australia["domain"] for v in australia["variables"] }
+    return australia['variables'], domains, australia['constraints']
+
+def setup_america():
+    """
+    Set up of the problem for America.
+    """
+    import json
+    # Load data
+    with open('data/adjacent_states.json', 'r') as fh:
+        adj_states_dict = json.load(fh)
+    # Set up variables
+    variables = list(adj_states_dict.keys())
+    # Set up domains
+    domain = ['red', 'green', 'blue', 'yellow']
+    domains = { v : domain for v in variables }
+    # Set up constraints
+    constraints = []
+    for state in variables:
+        for border in adj_states_dict[state]:
+            if border != 'None' and len(border) > 0:
+                constraints.append(MapColorConstraint(state, border))
+    return variables, domains, constraints
+
+if __name__ == "__main__":
+    from constraint_satisfaction import ConstraintSatisfactionProblem as CSP
+    # Load data
+    variables, domains, constraints = setup_america()
     # Initialize CSP framework
-    map_coloring_problem = CSP(australia["variables"], domains)
+    map_coloring_problem = CSP(variables, domains)
     # Add constraints
-    for c in australia["constraints"]:
+    for c in constraints:
         map_coloring_problem.add_constraint(c)
 
     # Solve problem
