@@ -116,7 +116,7 @@ if __name__ == "__main__":
     # Load data
     variables, domains, constraints = setup_america()
     # Initialize CSP framework
-    map_coloring_problem = CSP(variables, domains)
+    map_coloring_problem = CSP(variables, domains, verbose=True)
     # Add constraints
     for c in constraints:
         map_coloring_problem.add_constraint(c)
@@ -128,3 +128,4 @@ if __name__ == "__main__":
     else:
         #print(solution)
         plot_america_result(solution)
+        print("Number of calls to backtracking search: {}".format(map_coloring_problem._call_count))

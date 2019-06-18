@@ -23,9 +23,11 @@ class ConstraintSatisfactionProblem(object):
     Requires a list of *variables* and a dictionary *domains* that maps each
     variable to a list of domains.
     """
-    def __init__(self, variables, domains):
+    def __init__(self, variables, domains, verbose=False):
         self.variables = variables
         self.domains = domains
+        self.verbose = verbose
+        self._call_count = 0
         # Initialize constraints
         self.constraints = {}
         for var in self.variables:
@@ -60,6 +62,9 @@ class ConstraintSatisfactionProblem(object):
         Recursive search through variables to ensure all variables are
         assigned with all constraints met.
         """
+        self._call_count += 1
+        if self.verbose:
+            print("Call # {} to backtracking search".format(self._call_count))
         # Base-case of recursion: all variables successfully assigned
         if len(assignment) == len(self.variables):
             return assignment
