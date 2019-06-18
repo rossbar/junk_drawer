@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import random
 
 # Base class for constraints
 class Constraint(ABC):
@@ -23,11 +24,13 @@ class ConstraintSatisfactionProblem(object):
     Requires a list of *variables* and a dictionary *domains* that maps each
     variable to a list of domains.
     """
-    def __init__(self, variables, domains, verbose=False):
+    def __init__(self, variables, domains, verbose=False, relaunch=1e6):
         self.variables = variables
         self.domains = domains
         self.verbose = verbose
+        self.relaunch = relaunch
         self._call_count = 0
+
         # Initialize constraints
         self.constraints = {}
         for var in self.variables:
@@ -65,6 +68,11 @@ class ConstraintSatisfactionProblem(object):
         self._call_count += 1
         if self.verbose:
             print("Call # {} to backtracking search".format(self._call_count))
+        # If the church has gon
+        if self._call_count > self.relaunch:
+            assignment = {}
+            random.shuffle(self.variables)
+            self._call_count = 0
         # Base-case of recursion: all variables successfully assigned
         if len(assignment) == len(self.variables):
             return assignment
