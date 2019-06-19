@@ -54,7 +54,7 @@ def setup_america():
     """
     import json
     # Load data
-    with open('data/adjacent_states.json', 'r') as fh:
+    with open('../data/adjacent_states.json', 'r') as fh:
         adj_states_dict = json.load(fh)
     # Set up variables
     variables = list(adj_states_dict.keys())

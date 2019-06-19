@@ -33,5 +33,5 @@ for i, sl in enumerate(adj_states):
 adj_states_dict = { s : asl for (s, asl) in zip(states, adj_states) }
 
 # Save the results
-with open("data/adjacent_states.json", "w") as fh:
+with open("../data/adjacent_states.json", "w") as fh:
     json.dump(adj_states_dict, fh)
