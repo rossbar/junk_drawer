@@ -88,7 +88,7 @@ class UndirectedGraph(object):
         """
         Return all vertices connect to given vertex.
         """
-        self.neighbors_for_index(self.index_of(vertex))
+        return self.neighbors_for_index(self.index_of(vertex))
 
     def edges_for_index(self, index):
         """
