@@ -10,12 +10,12 @@ sys.path.append('../..') # For search
 sys.path.append('..')    # For graph
 
 from search import Node, bfs, node_to_path
-from graph import graph_of_top_15_metro_areas_in_US
+from cities import top_15_metro_areas_in_US
 
 start = "Boston"
 end = "Miami"
 
-city_graph = graph_of_top_15_metro_areas_in_US()
+city_graph = top_15_metro_areas_in_US()
 
 solution = bfs(start, lambda x : x == end, city_graph.neighbors_for_vertex)
 

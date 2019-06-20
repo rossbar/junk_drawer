@@ -3,7 +3,7 @@ Specifies classes for describing graph problems.
 
 See Classic Computer Science Problems in Python, Ch. 4
 """
-from edge import Edge
+from edge import Edge, WeightedEdge
 
 class UndirectedGraph(object):
     """
@@ -102,56 +102,29 @@ class UndirectedGraph(object):
         """
         return self._edges[self.index_of(vertex)]
 
-def graph_of_top_15_metro_areas_in_US():
+class WeightedGraph(UndirectedGraph):
     """
-    Manual creation of graph of top 15 metropolitan areas in US.
-
-    See Fig. 4.2 of CCSPiP for definition.
+    An undirected graph with weighted edges.
     """
-    city_graph = UndirectedGraph(["Seattle",
-                                  "San Francisco",
-                                  "Los Angeles",
-                                  "Riverside",
-                                  "Phoenix",
-                                  "Chicago",
-                                  "Boston",
-                                  "New York",
-                                  "Atlanta",
-                                  "Miami",
-                                  "Dallas",
-                                  "Houston",
-                                  "Detroit",
-                                  "Philadelphia",
-                                  "Washington"])
-    # Manually add edges according to CCSPiP fig. 4.2
-    city_graph.add_edge_by_vertices("Seattle", "Chicago")
-    city_graph.add_edge_by_vertices("Seattle", "San Francisco")
-    city_graph.add_edge_by_vertices("San Francisco", "Riverside")
-    city_graph.add_edge_by_vertices("San Francisco", "Los Angeles")
-    city_graph.add_edge_by_vertices("Los Angeles", "Riverside")
-    city_graph.add_edge_by_vertices("Los Angeles", "Phoenix")
-    city_graph.add_edge_by_vertices("Riverside", "Phoenix")
-    city_graph.add_edge_by_vertices("Riverside", "Chicago")
-    city_graph.add_edge_by_vertices("Phoenix", "Dallas")
-    city_graph.add_edge_by_vertices("Phoenix", "Houston")
-    city_graph.add_edge_by_vertices("Dallas", "Chicago")
-    city_graph.add_edge_by_vertices("Dallas", "Atlanta")
-    city_graph.add_edge_by_vertices("Dallas", "Houston")
-    city_graph.add_edge_by_vertices("Houston", "Atlanta")
-    city_graph.add_edge_by_vertices("Houston", "Miami")
-    city_graph.add_edge_by_vertices("Atlanta", "Chicago")
-    city_graph.add_edge_by_vertices("Atlanta", "Washington")
-    city_graph.add_edge_by_vertices("Atlanta", "Miami")
-    city_graph.add_edge_by_vertices("Miami", "Washington")
-    city_graph.add_edge_by_vertices("Chicago", "Detroit")
-    city_graph.add_edge_by_vertices("Detroit", "Boston")
-    city_graph.add_edge_by_vertices("Detroit", "Washington")
-    city_graph.add_edge_by_vertices("Detroit", "New York")
-    city_graph.add_edge_by_vertices("Boston", "New York")
-    city_graph.add_edge_by_vertices("New York", "Philadelphia")
-    city_graph.add_edge_by_vertices("Philadelphia", "Washington")
-    return city_graph
+    def __init__(self, vertices):
+        super().__init__(vertices)
 
-if __name__ == "__main__":
-    city_graph = graph_of_top_15_metro_areas_in_US()
-    print(city_graph)
+    def __str__(self):
+        out = ""
+        for i in range(self.vertex_count):
+            out += "{} -> {}\n".format(self.vertex_at(i), 
+                                       self.neighbors_for_index_with_weights(i))
+        return out
+        
+
+    def add_edge_by_indices(self, u, v, weight):
+        edge = WeightedEdge(u, v, weight)
+        self.add_edge(edge)
+
+    def add_edge_by_vertices(self, v1, v2, weight):
+        u = self.index_of(v1)
+        v = self.index_of(v2)
+        self.add_edge_by_indices(u, v, weight)
+
+    def neighbors_for_index_with_weights(self, index):
+        return [(self.vertex_at(edge.v), edge.weight) for edge in self.edges_for_index(index)]

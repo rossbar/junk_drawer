@@ -18,3 +18,19 @@ class Edge(object):
     def reversed(self):
         return Edge(self.v, self.u)
 
+class WeightedEdge(Edge):
+    """
+    An edge that includes a weight.
+    """
+    def __init__(self, u, v, weight):
+        super().__init__(u, v)
+        self.weight = weight
+
+    def __lt__(self, other):
+        return self.weight < other.weight
+
+    def __str__(self):
+        return "{} -{}> {}".format(self.u, self.weight, self.v)
+
+    def reversed(self):
+        return WeightedEdge(self.u, self.v, self.weight)
