@@ -33,4 +33,7 @@ class WeightedEdge(Edge):
         return "{} -{}> {}".format(self.u, self.weight, self.v)
 
     def reversed(self):
-        return WeightedEdge(self.u, self.v, self.weight)
+        return WeightedEdge(self.v, self.u, self.weight)
+
+def total_weight(path):
+    return sum([edge.weight for edge in path])
