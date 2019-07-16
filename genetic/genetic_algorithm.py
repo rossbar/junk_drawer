@@ -9,7 +9,7 @@ from random import random, choices
 from heapq import nlargest
 from statistics import mean
 
-class GeneticAlgorithm(Chromosome):
+class GeneticAlgorithm():
     SelectionType = Enum("SelectionType", "ROULETTE TOURNAMENT")
 
     def __init__(self, initial_population, threshold, max_generations=100,
@@ -65,7 +65,7 @@ class GeneticAlgorithm(Chromosome):
         # Due to the crossover, it is possible to have one more member of the
         # new population than there was in the original population.
         # Want to ensure that isn't the case
-        if len(new_population) > self._population:
+        if len(new_population) > len(self._population):
             new_population.pop()
         # Replace old generation
         self._population = new_population
@@ -74,7 +74,7 @@ class GeneticAlgorithm(Chromosome):
         """
         Mutate individuals in the population according to mutation probability.
         """
-        for individual in population:
+        for individual in self._population:
             if random() < self._mutation_chance:
                 individual.mutate()
 
@@ -82,10 +82,10 @@ class GeneticAlgorithm(Chromosome):
         best = max(self._population, key=self._fitness_key)
         for generation in range(self._max_generations):
             # Early termination if threshold is met
-            if best.fitness() > self.threshold:
+            if best.fitness() >= self._threshold:
                 return best
-            print("Generation {} | Best: {} | Avg. Fitness: {}".format(
-                generation, best, mean(self._population, key=self._fitness_key)
+            print("Generation {} | Best: {}".format(
+                generation, best
             ))
             self._reproduce_and_replace()
             self._mutate()
